@@ -7,7 +7,7 @@ https://www.patreon.com/RareTutor/posts/rt-minimax-h3-8-168668708
 [![Watch the Tutorial](https://img.youtube.com/vi/zUk6mqruWdA/maxresdefault.jpg)](https://www.youtube.com/watch?v=zUk6mqruWdA)
 
 
-# RT Minimax H3 VDN Pro (VideoDeltaNet on MiniMax H3)
+# RT Minimax H3 Pro (VideoDeltaNet on MiniMax H3)
 
 This custom node brings **VideoDeltaNet (VDN-H3)** hybrid attention into ComfyUI. It replaces standard quadratic softmax attention with chunked sliding-window softmax and bidirectional linear delta-rule memory, fully compatible with all NVIDIA GPUs on Windows and Linux.
 
