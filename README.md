@@ -1,3 +1,6 @@
+(dont install : incomplete repository, wait few more hours)
+
+
 
 # RT Minimax H3 VDN Pro (VideoDeltaNet on MiniMax H3)
 
