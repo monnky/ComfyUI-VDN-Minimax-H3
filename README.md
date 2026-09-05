@@ -1,10 +1,10 @@
-(dont install : incomplete repository, wait few more hours)
+# Download Workflow
 
------------------------------------------
-----------------------------------------
--------------------------------------
----------------------------------
------------------------------
+https://www.patreon.com/RareTutor/posts/rt-minimax-h3-8-168668708
+
+# How to use the Node in ComfyUI ???
+
+[![Watch the Tutorial](https://img.youtube.com/vi/zUk6mqruWdA/maxresdefault.jpg)](https://www.youtube.com/watch?v=zUk6mqruWdA)
 
 
 # RT Minimax H3 VDN Pro (VideoDeltaNet on MiniMax H3)
