@@ -29,4 +29,10 @@ Clone this repository directly into your ComfyUI `custom_nodes` directory:
 
 ```bash
 cd ComfyUI/custom_nodes
-git clone <repository_url>
+git clone https://github.com/monnky/ComfyUI-VDN-Minimax-H3
+```
+
+## Credits & License
+- Original Base Weights: OpenVDN/vdn-minimax-h3 (https://huggingface.co/OpenVDN/vdn-minimax-h3)
+- Project Blog: Video DeltaNet (https://openvdn.github.io/)
+- License: MiniMax H3 Community License Agreement (https://huggingface.co/MiniMaxAI/MiniMax-H3)
