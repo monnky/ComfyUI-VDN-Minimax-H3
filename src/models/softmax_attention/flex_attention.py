@@ -20,6 +20,8 @@ from src.checkpoints.key_mapping import ANCHOR_FRAME_MODES
 from src.models.sequence_layout import SequenceLayout
 from src.models.softmax_attention.window import window_bounds  # noqa: F401  (re-export for callers)
 
+__all__ = ["window_bounds", "build_window_block_mask", "window_softmax_flex"]
+
 
 _FLEX_CACHE = {}                 # the compiled flex_attention, one entry, never evicted
 
@@ -31,6 +33,17 @@ _FLEX_CACHE = {}                 # the compiled flex_attention, one entry, never
 _MASK_CACHE = collections.OrderedDict()
 MAX_CACHED_MASKS = 64
 
+
+
+def _safe_dynamo_config():
+    """Ensure Dynamo configuration is compatible across all ComfyUI and PyTorch versions."""
+    try:
+        if getattr(torch._dynamo.config, "suppress_errors", False):
+            torch._dynamo.config.fail_on_recompile_limit_hit = False
+        else:
+            torch._dynamo.config.fail_on_recompile_limit_hit = True
+    except Exception:
+        pass
 
 
 def _flex_attention_fn(inference=False):
@@ -72,7 +85,7 @@ def _flex_attention_fn(inference=False):
     """
     key = "infer" if inference else "train"
     if key not in _FLEX_CACHE:
-        torch._dynamo.config.fail_on_recompile_limit_hit = True
+        _safe_dynamo_config()
 
         # ...and raise the limit itself, which is a DIFFERENT knob and does not weaken
         # the one above. `recompile_limit` is per code object and defaults to 8; the
@@ -157,9 +170,15 @@ def build_window_block_mask(layout: SequenceLayout, bounds, device, block_size=N
         # keep the pair unless BOTH sides are video and the key falls outside the window
         return (~(query_is_video & key_is_video)) | inside_window
 
-    mask = create_block_mask(mask_mod, B=None, H=None, Q_LEN=layout.seq_len,
-                             KV_LEN=layout.seq_len, device=device,
-                             BLOCK_SIZE=block_size, _compile=True)
+    _safe_dynamo_config()
+    try:
+        mask = create_block_mask(mask_mod, B=None, H=None, Q_LEN=layout.seq_len,
+                                 KV_LEN=layout.seq_len, device=device,
+                                 BLOCK_SIZE=block_size, _compile=True)
+    except Exception:
+        mask = create_block_mask(mask_mod, B=None, H=None, Q_LEN=layout.seq_len,
+                                 KV_LEN=layout.seq_len, device=device,
+                                 BLOCK_SIZE=block_size, _compile=False)
     _MASK_CACHE[key] = mask
     while len(_MASK_CACHE) > MAX_CACHED_MASKS:
         _MASK_CACHE.popitem(last=False)
